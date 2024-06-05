@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       home: App(),
     );
   }
-}
+}/// экран
 
 class App extends StatefulWidget {
 
@@ -30,8 +30,6 @@ class App extends StatefulWidget {
 
 
 class _App extends  State<App> {
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,15 +48,15 @@ class _App extends  State<App> {
           children: [
             CustomPaint(
               size: const Size(double.infinity, double.infinity),
-              painter: schedule(),
+              painter: schedule(), /// экран для  рисовния => schedule
             ),
 
-            BezierControlPanel(),
+            BezierControlPanel(),///всплывающий экран => SildingPanel
           ]
       ),
 
     );
   }
-}
+}/// структура экрана
 
 

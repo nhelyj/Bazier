@@ -1,13 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart' ;
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'media.dart';
 
-
-
 class BezierControlPanel extends StatefulWidget {
+  const BezierControlPanel({super.key});
+
   @override
   _BezierControlPanelState createState() => _BezierControlPanelState();
 }
@@ -15,86 +13,6 @@ class BezierControlPanel extends StatefulWidget {
 class _BezierControlPanelState extends State<BezierControlPanel> {
   double t = 1.0;
   List<Widget> containers = [];
-
-  @override
-  void initState() {
-    super.initState();
-    containers.add(buildContainer(1));
-  }
-
-  void addContainer() {
-    setState(() {
-      containers.add(buildContainer(containers.length + 1));
-    });
-  }
-
-  Widget buildContainer(int number) {
-    return Container(
-
-       width: 500,
-      height: 45,
-      decoration: const BoxDecoration(
-        color: Color_1,
-        borderRadius: BorderRadius.all(Radius.circular(40)),
-      ),
-     // padding: const EdgeInsets.symmetric(vertical: 2.5),
-      margin: const EdgeInsets.symmetric(vertical: 5.5),
-
-      child: Row(
-
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-
-                  Text(
-                    '$number',
-                    style: const TextStyle(color: Color_2, fontSize: 20),
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 2.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                    width: 100,
-                    decoration: const BoxDecoration(
-                      color: Color_2,
-                      borderRadius: BorderRadius.all(Radius.circular(40)),
-                    ),
-                    child: const TextField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: 'x',
-                        border: InputBorder.none,
-                      ),
-                    ),
-
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 2.5),
-                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
-                    width: 100,
-                    decoration: const BoxDecoration(
-                      color: Color_2,
-                      borderRadius: BorderRadius.all(Radius.circular(40)),
-                    ),
-                    child: const TextField(
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: 'y',
-                        border: InputBorder.none,
-                      ),
-                    ),
-
-                  ),
-
-                ],
-              ),
-
-
-
-
-    );
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -153,5 +71,126 @@ class _BezierControlPanelState extends State<BezierControlPanel> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
       color: Color_2,
     );
-  }
+  }/// тело всплывающего виджита
+
+  @override
+  void initState() {
+    super.initState();
+    containers.add(buildContainer(1));
+  }///  создаёт  1 виджет с полем для ввода
+
+  void addContainer() {
+    setState(() {
+      containers.add(buildContainer(containers.length + 1));
+    });
+  }/// при нажатии создат ещё  виджет с полем для ввода
+
+  Widget buildContainer(int number) {
+    return Container(
+
+      width: 500,
+      //height: 45,
+      decoration: const BoxDecoration(
+        color: Color_1,
+        borderRadius: BorderRadius.all(Radius.circular(40)),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 2.5),
+      margin: const EdgeInsets.symmetric(vertical: 5.5),
+
+      child: Row(
+
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+
+          Text(
+            '$number',
+            style: const TextStyle(color: Color_2, fontSize: 20),
+          ),
+
+          const SizedBox(
+            width: 100,
+            height: 50,
+            child: TextField(
+              style: TextStyle(
+                color: Color_2,
+              ),
+              keyboardType:  TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "x",
+                labelStyle: TextStyle(
+                  color: Color_2,),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    borderSide: BorderSide(
+                        color: Color_2,
+                        style: BorderStyle.solid
+                    )
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  borderSide: BorderSide(
+                    color: Color_2,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  borderSide: BorderSide(
+                      color: Color_2,
+                      style: BorderStyle.solid
+                  ),
+                ),
+              ),
+
+            ),
+
+          ),
+
+          const SizedBox(
+            width: 100,
+            height: 50,
+            child: TextField(
+
+              style: TextStyle(
+                color: Color_2,
+              ),
+              keyboardType:  TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "y",
+                labelStyle: TextStyle(
+                  color: Color_2,),
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(40)),
+                    borderSide: BorderSide(
+                        color: Color_2,
+                        style: BorderStyle.solid
+                    )
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  borderSide: BorderSide(
+                    color: Color_2,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(40)),
+                  borderSide: BorderSide(
+                      color: Color_2,
+                      style: BorderStyle.solid
+                  ),
+                ),
+              ),
+
+            ),
+
+          ),
+        ],
+      ),
+
+
+
+
+    );
+  }/// сам  виджет
+
+
 }
