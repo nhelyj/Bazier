@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'schedule.dart';
 import "media.dart";
 import 'slidingPanel.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:io';
 
 void main() => runApp(const MyApp());
 
@@ -34,6 +36,35 @@ class _App extends State<App> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.login, color: Color_2),
+          onPressed: () {
+            // Действие при нажатии на кнопку меню
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Color_2),
+            onPressed: () async {
+              // Действие при нажатии на кнопку поиска
+              FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+              if (result != null) {
+                PlatformFile file = result.files.first;
+                String? path = file.path;
+
+                if (path != null) {
+                  String contents = await File(path).readAsString();
+                  List<Offset> newPoints = parseCoordinates(contents);
+
+                  setState(() {
+                    points = newPoints;
+                  });
+                }
+              }
+            },
+          ),
+        ],
         title: const Center(
           child: Text(
             "bazier",
@@ -58,4 +89,24 @@ class _App extends State<App> {
       ),
     );
   }
+
+  List<Offset> parseCoordinates(String contents) {
+    List<Offset> newPoints = [];
+    List<String> lines = contents.split('\n');
+    for (String line in lines) {
+      line = line.trim();
+      if (line.isNotEmpty) {
+        List<String> parts = line.split(RegExp(r'[ ,]+'));
+        if (parts.length == 2) {
+          double? x = double.tryParse(parts[0]);
+          double? y = double.tryParse(parts[1]);
+          if (x != null && y != null) {
+            newPoints.add(Offset(x, y));
+          }
+        }
+      }
+    }
+    return newPoints;
+  }
 }
+

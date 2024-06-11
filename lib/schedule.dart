@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bazier/media.dart';
 import 'package:flutter/material.dart';
 
@@ -13,53 +11,61 @@ class schedule extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Color_2
-      ..strokeWidth = 4.0
+      ..strokeWidth = 4
       ..style = PaintingStyle.stroke;
 
+    if (points.isEmpty) return;
 
+    // Вычисление минимальных и максимальных координат
+    double minX = points.map((p) => p.dx).reduce((a, b) => a < b ? a : b);
+    double maxX = points.map((p) => p.dx).reduce((a, b) => a > b ? a : b);
+    double minY = points.map((p) => p.dy).reduce((a, b) => a < b ? a : b);
+    double maxY = points.map((p) => p.dy).reduce((a, b) => a > b ? a : b);
 
-    if (points.isNotEmpty) {
-      Path path = Path();
-      path.moveTo(points[0].dx, points[0].dy);
+    // Вычисление масштабирования
+    double scaleX = size.width / (maxX - minX);
+    double scaleY = size.height / (maxY - minY);
+    double scale = scaleX < scaleY ? scaleX : scaleY;
 
-     // for (int i = 1; i < points.length; i++) {
-      //  path.lineTo(points[i].dx, points[i].dy);
+    // Перенос начала координат в центр и масштабирование
+    canvas.translate(size.width / 2, size.height / 2);
+    canvas.scale(scale, -scale);
 
-    //  }
-      for (var i=1 ; i<points.length-2; i++){
-        var xc =(points[i].dx+points[i+i].dx)/2;
-        var yc =(points[i].dy+points[i+i].dy)/2;
+    // Смещение графика, чтобы центрировать его
+    double offsetX = -(minX + maxX) / 2;
+    double offsetY = -(minY + maxY) / 2;
+    canvas.translate(offsetX, offsetY);
+
+    Path path = Path();
+    path.moveTo(points[0].dx, points[0].dy);
+
+    // Проверка на количество точек
+    //if (points.length == 2) {
+    //  path.lineTo(points[1].dx, points[1].dy);
+   // } else {
+      for (var i = 1; i < points.length - 2; i++) {
+        var xc = (points[i].dx + points[i + 1].dx) / 2;
+        var yc = (points[i].dy + points[i + 1].dy) / 2;
         path.quadraticBezierTo(points[i].dx, points[i].dy, xc, yc);
-      }
 
-      
+      }
       path.quadraticBezierTo(
-        points[points.length-2].dx,
-        points[points.length-2].dy,
-        points[points.length-1].dx,
-        points[points.length-1].dy,
-          );
-      /*List<Color> pointColors = List.generate(
-        double.infinity.toInt(),
-            (index) => Color.fromARGB(
-          255,
-          Random().nextInt(256),
-          Random().nextInt(256),
-          Random().nextInt(256),
-        ),
-      );*/
-      //List<Color> pointColors = [Colors.red, Colors.orange, Colors.yellow, Colors.green];
-      for (int i = 0; i < points.length; i++) {
-        Paint pointPaint = Paint()
-          ..color = Color_2//pointColors[i]
-          ..strokeWidth = 8.0
-          ..style = PaintingStyle.fill;
-        canvas.drawCircle(points[i], 5.0, pointPaint);
-      }
+        points[points.length - 2].dx,
+        points[points.length - 2].dy,
+        points[points.length - 1].dx,
+        points[points.length - 1].dy,
+      );
+    //}
 
-
-      canvas.drawPath(path, paint);
+    for (int i = 0; i < points.length; i++) {
+      Paint pointPaint = Paint()
+        ..color = Color_2
+        ..strokeWidth = 10
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(points[i], 5.0 / scale, pointPaint);
     }
+
+    canvas.drawPath(path, paint);
   }
 
   @override
@@ -67,3 +73,5 @@ class schedule extends CustomPainter {
     return true;
   }
 }
+
+
