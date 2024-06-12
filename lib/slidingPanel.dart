@@ -10,12 +10,13 @@ class BezierControlPanel extends StatefulWidget {
   const BezierControlPanel({super.key, required this.onCoordinatesChanged});
 
   @override
-  _BezierControlPanelState createState() => _BezierControlPanelState();
+  BezierControlPanelState createState() => BezierControlPanelState();
 }
 
-class _BezierControlPanelState extends State<BezierControlPanel> {
+class BezierControlPanelState extends State<BezierControlPanel> {
   List<Offset> points = [Offset(0, 0)];
   List<int> tNumbers = [1]; // Список для хранения номеров контейнеров t
+  List<int> tValues = []; // Список для хранения значений t
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,7 @@ class _BezierControlPanelState extends State<BezierControlPanel> {
     return Container(
       width: 160,
       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       decoration: BoxDecoration(
         color: Color_1_1,
         borderRadius: BorderRadius.circular(40),
@@ -128,11 +129,12 @@ class _BezierControlPanelState extends State<BezierControlPanel> {
             '$number',
             style: const TextStyle(color: Color_2, fontSize: 20),
           ),
-          const Center(
+          Center(
             child: TextField(
-              style: TextStyle(color: Color_2),
+              maxLength: 3,
+              style: const TextStyle(color: Color_2),
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: "t",
                 labelStyle: TextStyle(color: Color_2),
                 border: OutlineInputBorder(
@@ -148,6 +150,16 @@ class _BezierControlPanelState extends State<BezierControlPanel> {
                   borderSide: BorderSide(color: Color_2, style: BorderStyle.solid),
                 ),
               ),
+              onChanged: (value) {
+                setState(() {
+                  int intValue = int.tryParse(value) ?? 0;
+                  if (tValues.length >= number) {
+                    tValues[number - 1] = intValue;
+                  } else {
+                    tValues.add(intValue);
+                  }
+                });
+              },
             ),
           ),
         ],
@@ -165,6 +177,7 @@ class _BezierControlPanelState extends State<BezierControlPanel> {
     setState(() {
       if (tNumbers.length < 10) {
         tNumbers.add(tNumbers.length + 1);
+        tValues.add(0); // Добавляем начальное значение 0 для нового поля t
       }
     });
   }
