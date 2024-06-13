@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:device_preview/device_preview.dart';
 import 'schedule.dart';
 import "media.dart";
 import 'slidingPanel.dart';
@@ -7,7 +8,13 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
-void main() => runApp(const MyApp());
+//void main() => runApp(const MyApp());
+void main() => runApp(
+  DevicePreview(
+    //enabled: !kReleaseMode,
+    builder: (context) => MyApp(), // Wrap your app
+  ),
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
