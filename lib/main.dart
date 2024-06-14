@@ -7,7 +7,7 @@ import 'media.dart';
 import 'slidingPanel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-
+import 'package:device_preview/device_preview.dart';
 import 'package:path/path.dart' as path;
 
 void main() => runApp(const MyApp());
@@ -161,7 +161,7 @@ class _App extends State<App> {
 
   void saveToFile() async {
     if (saveDirectory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пожалуйста, сначала выберите каталог')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Пожалуйста, сначала выберите каталог')));
       return;
     }
 
@@ -193,7 +193,7 @@ class _App extends State<App> {
 
   Offset bezierPoint(double t) {
     int n = points.length - 1;
-    Offset point = Offset(0, 0);
+    Offset point = const Offset(0, 0);
     for (int i = 0; i <= n; i++) {
       double binomial = binomialCoefficient(n, i);
       double term = binomial * pow((1 - t), (n - i)) * pow(t, i);
