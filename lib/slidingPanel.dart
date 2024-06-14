@@ -1,8 +1,5 @@
 import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'media.dart';
 
@@ -16,7 +13,7 @@ class BezierControlPanel extends StatefulWidget {
 }
 
 class BezierControlPanelState extends State<BezierControlPanel> {
-  List<Offset> points = [Offset(0, 0)];
+  List<Offset> points = [const Offset(0, 0)];
   List<int> tNumbers = [1]; // Список для хранения номеров контейнеров t
   List<int> tValues = []; // Список для хранения значений t
 
@@ -191,7 +188,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
   @override
   void initState() {
     super.initState();
-    points.add(Offset(0, 0));
+    points.add(const Offset(0, 0));
   }
 
 
@@ -207,7 +204,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
 
   void addContainer() {
     setState(() {
-      points.add(Offset(0, 0));
+      points.add(const Offset(0, 0));
     });
   }
 
