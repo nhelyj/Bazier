@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +20,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
   List<int> tNumbers = [1]; // Список для хранения номеров контейнеров t
   List<int> tValues = []; // Список для хранения значений t
 
-  final TextEditingController _controller = TextEditingController();
+  //final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +50,10 @@ class BezierControlPanelState extends State<BezierControlPanel> {
               style: TextStyle(color: Color_1),
             ),
           ),
-          Container(
+          SizedBox(
             height: 100,
+            child: ScrollConfiguration(
+              behavior: CustomScrollBehavior(),
             child: ListView(
               scrollDirection: Axis.horizontal,
               children: <Widget>[
@@ -71,6 +75,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
                   ),
               ],
             ),
+          ),
           ),
           Container(
             margin: const EdgeInsets.only(
@@ -115,11 +120,13 @@ class BezierControlPanelState extends State<BezierControlPanel> {
     );
   }
 
+
+
   Widget buildTContainer(int number) {
     return Container(
       width: 160,
-      margin: const EdgeInsets.symmetric(horizontal: 5),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+      padding: const EdgeInsets.symmetric(horizontal: 18),
       decoration: BoxDecoration(
         color: Color_1_1,
         borderRadius: BorderRadius.circular(40),
@@ -133,8 +140,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
           ),
           Center(
             child: TextField(
-              //maxLength: 2,
-              controller: _controller,
+              //controller: _controller,
               style: const TextStyle(color: Color_2),
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
@@ -154,7 +160,7 @@ class BezierControlPanelState extends State<BezierControlPanel> {
                 ),
               ),
               onChanged: (value) {
-                if (int.tryParse(value) != null) {
+                /*if (int.tryParse(value) != null) {
                   int number = int.parse(value);
                   if (number > 100) {
                     _controller.text = '100';
@@ -162,7 +168,8 @@ class BezierControlPanelState extends State<BezierControlPanel> {
                       TextPosition(offset: _controller.text.length),
                     );
                   }
-                }
+                }*/
+
                 setState(() {
                   int intValue = int.tryParse(value) ?? 0;
                   if (tValues.length >= number) {
@@ -179,16 +186,15 @@ class BezierControlPanelState extends State<BezierControlPanel> {
     );
   }
 
+
+
   @override
   void initState() {
     super.initState();
     points.add(Offset(0, 0));
   }
 
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+
 
   void addTContainer() {
     setState(() {
@@ -291,4 +297,11 @@ class BezierControlPanelState extends State<BezierControlPanel> {
       ),
     );
   }
+}
+class CustomScrollBehavior extends ScrollBehavior {
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    PointerDeviceKind.touch,
+    PointerDeviceKind.mouse,
+  };
 }

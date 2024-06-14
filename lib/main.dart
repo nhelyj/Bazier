@@ -1,20 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:device_preview/device_preview.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'schedule.dart';
-import "media.dart";
+import 'media.dart';
 import 'slidingPanel.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
-//void main() => runApp(const MyApp());
-void main() => runApp(
-  DevicePreview(
-    //enabled: !kReleaseMode,
-    builder: (context) => MyApp(), // Wrap your app
-  ),
-);
+import 'package:path/path.dart' as path;
+
+void main() => runApp(const MyApp());
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -43,6 +40,16 @@ class _App extends State<App> {
   String? saveDirectory;
 
   @override
+  void initState() {
+    super.initState();
+    requestPermissions();
+  }
+
+  Future<void> requestPermissions() async {
+    await Permission.storage.request();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -56,7 +63,7 @@ class _App extends State<App> {
               setState(() {
                 saveDirectory = selectedDirectory;
               });
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Selected Directory: $selectedDirectory')));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Избранный каталог: $selectedDirectory')));
             }
           },
         ),
@@ -99,15 +106,15 @@ class _App extends State<App> {
                 labelStyle: TextStyle(color: Color_2),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40)),
-                  borderSide: BorderSide(color: Color_2, style: BorderStyle.none),
+                  borderSide: BorderSide(color: Color_2, style: BorderStyle.solid),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40)),
-                  borderSide: BorderSide(color: Color_2),
+                  borderSide: BorderSide(color: Color_2, style: BorderStyle.solid),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(40)),
-                  borderSide: BorderSide(color: Color_2, style: BorderStyle.none),
+                  borderSide: BorderSide(color: Color_2, style: BorderStyle.solid),
                 ),
               ),
             ),
@@ -154,7 +161,7 @@ class _App extends State<App> {
 
   void saveToFile() async {
     if (saveDirectory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Please select a directory first')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Пожалуйста, сначала выберите каталог')));
       return;
     }
 
@@ -172,11 +179,40 @@ class _App extends State<App> {
     final file = File(path.join(saveDirectory!, filename));
     await file.writeAsString(content);
 
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Saved to $filename')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Сохранено в $filename')));
   }
 
   List<Offset> bezierInterpolation(List<int> tValues) {
-    return tValues.map((t) => Offset(t.toDouble(), t.toDouble())).toList();
+    List<Offset> interpolatedPoints = [];
+    for (int t in tValues) {
+      double tNorm = t / 100.0;
+      interpolatedPoints.add(bezierPoint(tNorm));
+    }
+    return interpolatedPoints;
+  }
+
+  Offset bezierPoint(double t) {
+    int n = points.length - 1;
+    Offset point = Offset(0, 0);
+    for (int i = 0; i <= n; i++) {
+      double binomial = binomialCoefficient(n, i);
+      double term = binomial * pow((1 - t), (n - i)) * pow(t, i);
+      point = point + points[i] * term;
+    }
+    return point;
+  }
+
+  double binomialCoefficient(int n, int k) {
+    return factorial(n) / (factorial(k) * factorial(n - k));
+  }
+
+  double factorial(int n) {
+    if (n == 0) return 1;
+    double result = 1;
+    for (int i = 1; i <= n; i++) {
+      result *= i;
+    }
+    return result;
   }
 }
 
